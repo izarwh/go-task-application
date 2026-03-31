@@ -72,22 +72,23 @@ func (s *taskService) CreateTask(ctx context.Context, req *domain.TaskRequest) (
 }
 
 func (s *taskService) UpdateTask(ctx context.Context, id uuid.UUID, req *domain.TaskRequest) (*domain.TaskResponse, error) {
-
-	task, err := s.taskRepo.GetTask(id)
+	_, err := s.taskRepo.GetTask(id)
 	if err != nil {
 		return nil, err
 	}
-	acuiredTask := domain.TaskRequestMapper(*req)
 
-	if err := s.taskRepo.UpdateTask(acuiredTask.ID, task); err != nil {
+	updatedTask := domain.TaskRequestMapper(*req)
+
+	if err := s.taskRepo.UpdateTask(id, &updatedTask); err != nil {
 		return nil, err
 	}
 
-	taskResponse := domain.TaskDaoMapper(*task)
+	updatedTask.ID = id
 
 	cacheKey := fmt.Sprintf("task:%s", id.String())
 	s.redisClient.Del(ctx, cacheKey)
 
+	taskResponse := domain.TaskDaoMapper(updatedTask)
 	return &taskResponse, nil
 }
 

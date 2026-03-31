@@ -26,7 +26,7 @@ func NewTaskRepo(db *gorm.DB) ITaskRepo {
 
 func (r *taskRepo) GetTask(id uuid.UUID) (*domain.TaskDao, error) {
 	var task domain.TaskDao
-	if err := r.DB.First(&task).Where("id = ?", id).Error; err != nil {
+	if err := r.DB.Where("id = ?", id).Where("is_deleted = ?", false).First(&task).Error; err != nil {
 		return nil, apperror.FromDB(err, "task")
 	}
 	return &task, nil
@@ -36,9 +36,9 @@ func (r *taskRepo) GetTasks(page, limit int, filter domain.TaskFilter) ([]domain
 	var tasks []domain.TaskDao
 	offsets := (page - 1) * limit
 
-	if err := r.DB.Offset(offsets).Limit(limit).Find(&tasks).Scopes(func(d *gorm.DB) *gorm.DB {
+	if err := r.DB.Where("is_deleted = ?", false).Scopes(func(d *gorm.DB) *gorm.DB {
 		return filterTasks(d, filter)
-	}).Error; err != nil {
+	}).Offset(offsets).Limit(limit).Find(&tasks).Error; err != nil {
 		return nil, apperror.FromDB(err, "task")
 	}
 

@@ -33,6 +33,6 @@ func taskDaoToResponse(dao TaskDao) TaskResponse {
 		Title:       dao.Title,
 		Description: string(dao.Description),
 		DueDate:     dao.DueDate.Format("2006-01-02"),
-		Status:      dao.Status,
+		Status:      string(dao.Status),
 	}
 }

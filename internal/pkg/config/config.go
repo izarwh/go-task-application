@@ -8,6 +8,8 @@ import (
 
 type Config struct {
 	AppPort     string `mapstructure:"APP_PORT"`
+	AppEnv      string `mapstructure:"APP_ENV"`
+	LogLevel    string `mapstructure:"LOG_LEVEL"`
 	DBHost      string `mapstructure:"DB_HOST"`
 	DBPort      string `mapstructure:"DB_PORT"`
 	DBUser      string `mapstructure:"DB_USER"`

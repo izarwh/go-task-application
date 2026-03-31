@@ -14,7 +14,7 @@ import (
 
 type TaskRequest struct {
 	Title       string `json:"title" validate:"required,min=3,max=255"`
-	Description string `json:"description" validate:"required,json"`
+	Description string `json:"description" validate:"required"`
 	DueDate     string `json:"due_date" validate:"required,datetime=2006-01-02"`
 	Status      string `json:"status" validate:"required,oneof=pending completed"`
 }
@@ -36,7 +36,7 @@ func TaskRequestMapper(req TaskRequest) TaskDao {
 		Title:       req.Title,
 		Description: req.Description,
 		DueDate:     helper.StringTimeToTime(req.DueDate),
-		Status:      req.Status,
+		Status:      TaskStatus(req.Status),
 	}
 }
 

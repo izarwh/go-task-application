@@ -6,6 +6,7 @@ import (
 	"task_planner_application/internal/api/router"
 	"task_planner_application/internal/pkg/client"
 	"task_planner_application/internal/pkg/config"
+	"task_planner_application/internal/pkg/logger"
 	"task_planner_application/internal/task/handlers"
 	"task_planner_application/internal/task/infra"
 	"task_planner_application/internal/task/services"
@@ -17,24 +18,25 @@ func main() {
 		log.Fatalf("Failed to load config: %v", err)
 	}
 
-	// 2. Initialize Database Client (PostgreSQL)
+	logger.Init(logger.Config{
+		Level:       cfg.LogLevel,
+		Environment: cfg.AppEnv,
+	})
+
 	db, err := client.NewPostgresClient(cfg)
 	if err != nil {
 		log.Fatalf("Failed to initialize database: %v", err)
 	}
 
-	// 3. Initialize Redis Client
 	redisClient, err := client.NewRedisClient(cfg)
 	if err != nil {
 		log.Fatalf("Failed to initialize redis: %v", err)
 	}
 
-	// 4. Initialize Dependency Injection
 	taskRepo := infra.NewTaskRepo(db)
 	taskService := services.NewTaskService(taskRepo, redisClient)
 	taskHandler := handlers.NewTaskHandler(taskService)
 
-	// 5. Initialize API Router
 	app := router.NewChiRouter(taskHandler)
 
 	port := cfg.AppPort
