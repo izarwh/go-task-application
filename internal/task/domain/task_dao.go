@@ -29,3 +29,10 @@ type TaskDao struct {
 func (t *TaskDao) TableName() string {
 	return "tasks"
 }
+
+func (t *TaskDao) BeforeCreate(tx *gorm.DB) error {
+	if t.ID == uuid.Nil {
+		t.ID = uuid.New()
+	}
+	return nil
+}
