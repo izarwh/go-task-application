@@ -1,4 +1,4 @@
-<img width="1077" height="714" alt="image" src="https://github.com/user-attachments/assets/25398407-0ae8-4466-8cb0-a2baebc8426b" /># Go Task Application
+# Go Task Application
 
 A task management REST API built with Go, featuring PostgreSQL as the primary database, Redis for caching, and Chi as the web framework.
 
