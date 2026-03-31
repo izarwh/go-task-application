@@ -37,7 +37,6 @@ func NewTaskService(ITaskRepo infra.ITaskRepo, redisClient *redis.Client) ITaskS
 func (s *taskService) GetTask(ctx context.Context, id uuid.UUID) (*domain.TaskResponse, error) {
 	cacheKey := fmt.Sprintf("task:%s", id.String())
 
-	// 1. Try fetching from Redis
 	cachedTask, err := s.redisClient.Get(ctx, cacheKey).Result()
 	if err == nil {
 		var taskResponse domain.TaskResponse
@@ -46,7 +45,6 @@ func (s *taskService) GetTask(ctx context.Context, id uuid.UUID) (*domain.TaskRe
 		}
 	}
 
-	// 2. Fetch from DB if Redis misses or fails
 	task, err := s.taskRepo.GetTask(id)
 	if err != nil {
 		logger.Error(ctx, "failed to get task", err)
@@ -55,7 +53,6 @@ func (s *taskService) GetTask(ctx context.Context, id uuid.UUID) (*domain.TaskRe
 
 	taskResponse := domain.TaskDaoMapper(*task)
 
-	// 3. Set to Redis
 	if taskBytes, err := json.Marshal(taskResponse); err == nil {
 		s.redisClient.Set(ctx, cacheKey, taskBytes, 15*time.Minute)
 	}
@@ -75,7 +72,7 @@ func (s *taskService) CreateTask(ctx context.Context, req *domain.TaskRequest) (
 }
 
 func (s *taskService) UpdateTask(ctx context.Context, id uuid.UUID, req *domain.TaskRequest) (*domain.TaskResponse, error) {
-	// check if the data exist
+
 	task, err := s.taskRepo.GetTask(id)
 	if err != nil {
 		return nil, err
@@ -88,7 +85,6 @@ func (s *taskService) UpdateTask(ctx context.Context, id uuid.UUID, req *domain.
 
 	taskResponse := domain.TaskDaoMapper(*task)
 
-	// invalidate cache
 	cacheKey := fmt.Sprintf("task:%s", id.String())
 	s.redisClient.Del(ctx, cacheKey)
 
@@ -105,7 +101,6 @@ func (s *taskService) DeleteTask(ctx context.Context, id uuid.UUID) error {
 		return err
 	}
 
-	// invalidate cache
 	cacheKey := fmt.Sprintf("task:%s", id.String())
 	s.redisClient.Del(ctx, cacheKey)
 
