@@ -18,9 +18,3 @@ type TaskDao struct {
 	DeletedAt   gorm.DeletedAt `gorm:"index"`
 	IsDeleted   bool           `gorm:"default:false"`
 }
-
-type TaskFilter struct {
-	Status  string `gorm:"type:varchar(50)"`
-	DueDate *time.Time
-	Title   string `gorm:"type:varchar(255)"`
-}
