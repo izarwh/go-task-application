@@ -1,4 +1,4 @@
-# Go Task Application
+<img width="1077" height="714" alt="image" src="https://github.com/user-attachments/assets/25398407-0ae8-4466-8cb0-a2baebc8426b" /># Go Task Application
 
 A task management REST API built with Go, featuring PostgreSQL as the primary database, Redis for caching, and Chi as the web framework.
 
@@ -65,3 +65,19 @@ Run the compiled binary:
 ```bash
 ./app
 ```
+
+## Evidence
+- **Success Input Data**
+  <img width="1077" height="714" alt="image" src="https://github.com/user-attachments/assets/745fa947-0822-4154-9e31-83ea82aa1baf" />
+
+- **Success Get Tasks**
+  <img width="1078" height="921" alt="image" src="https://github.com/user-attachments/assets/6373bc44-2951-4276-b528-038a2db2a269" />
+
+- **Success Get Task By ID**
+  <img width="1082" height="835" alt="image" src="https://github.com/user-attachments/assets/7e7cac2b-af07-413a-a168-d40cea219905" />
+
+- **Success Delete**
+  <img width="1082" height="686" alt="image" src="https://github.com/user-attachments/assets/f6d3b505-1821-477c-8804-347a3504cf76" />
+
+- **Success Update**
+  <img width="1074" height="755" alt="image" src="https://github.com/user-attachments/assets/83f8b94c-b673-4083-8470-93891626c3b3" />
